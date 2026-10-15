@@ -21,18 +21,7 @@ export default function Header({
         </div>
 
         <div className="flex items-center gap-2">
-          <button
-            onClick={onOpenGuide}
-            className="hidden rounded-lg border border-white/10 px-3 py-2 text-xs font-medium text-slate-300 transition hover:bg-white/5 sm:inline-flex"
-          >
-            Deploy Guide
-          </button>
-          <button
-            onClick={onOpenSettings}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-slate-200 transition hover:bg-white/10"
-          >
-            ⚙️ <span className="hidden sm:inline">Settings</span>
-          </button>
+          
         </div>
       </div>
     </header>
