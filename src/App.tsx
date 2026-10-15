@@ -2,8 +2,7 @@ import { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScannerSection from "./components/ScannerSection";
-import SettingsDrawer from "./components/SettingsDrawer";
-import DeployGuideModal from "./components/DeployGuideModal";
+
 
 export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
