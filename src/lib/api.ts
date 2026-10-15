@@ -1,6 +1,6 @@
 const STORAGE_KEY = "marsscanner_api_base";
 const DEFAULT_API_BASE =
-  (import.meta as any)?.env?.VITE_API_BASE?.toString().trim() || "http://localhost:8000";
+  (import.meta as any)?.env?.VITE_API_BASE?.toString().trim() || "https://mars-scanner-9ttm.onrender.com";
 
 export function getApiBase(): string {
   const stored = typeof window !== "undefined" ? window.localStorage.getItem(STORAGE_KEY) : null;
