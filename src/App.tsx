@@ -57,27 +57,7 @@ export default function App() {
           </div>
 
           {/* Quick setup callout */}
-          <div className="mt-10 rounded-2xl border border-orange-500/20 bg-gradient-to-br from-orange-500/5 to-red-600/5 p-6 text-center sm:p-8">
-            <h2 className="text-lg font-semibold text-white sm:text-xl">Want this running on your own link?</h2>
-            <p className="mx-auto mt-2 max-w-xl text-sm text-slate-400">
-              Deploy the FastAPI backend for free on Render, deploy this frontend for free on
-              Vercel or Netlify, then point it to your backend from Settings — done.
-            </p>
-            <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
-              <button
-                onClick={() => setGuideOpen(true)}
-                className="rounded-xl bg-gradient-to-r from-orange-500 to-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:brightness-110"
-              >
-                View Deployment Guide
-              </button>
-              <button
-                onClick={() => setSettingsOpen(true)}
-                className="rounded-xl border border-white/10 px-5 py-2.5 text-sm font-semibold text-slate-200 transition hover:bg-white/5"
-              >
-                Configure Backend URL
-              </button>
-            </div>
-          </div>
+         
         </main>
 
         <Footer />
