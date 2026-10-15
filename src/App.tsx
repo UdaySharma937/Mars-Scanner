@@ -138,6 +138,20 @@ export default function App() {
                 >
                   <span>📂</span> Directories Scan
                 </button>
+
+                <a
+                  href="https://github.com/UdaySharma937"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMenuOpen(false)}
+                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left font-medium transition-all border ${
+                    isDarkMode 
+                      ? "bg-white/5 hover:bg-orange-500/15 text-slate-200 hover:text-orange-300 border-transparent hover:border-orange-500/30" 
+                      : "bg-slate-50 hover:bg-orange-50 text-slate-700 hover:text-orange-600 border-slate-200 hover:border-orange-200"
+                  }`}
+                >
+                  <span>🐙</span> GitHub Profile
+                </a>
               </div>
             </div>
           </div>
@@ -224,4 +238,4 @@ export default function App() {
       <DeployGuideModal open={guideOpen} onClose={() => setGuideOpen(false)} />
     </div>
   );
-}
+            }
