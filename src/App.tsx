@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScannerSection from "./components/ScannerSection";
@@ -16,6 +16,9 @@ export default function App() {
   const [guideOpen, setGuideOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   
+  // Dark/Light theme state
+  const [isDarkMode, setIsDarkMode] = useState(true);
+
   // Mobile par context select karne ke liye current context state
   const [activeTab, setActiveTab] = useState<keyof typeof scannerModes>("subdomains");
 
@@ -28,7 +31,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0b0607] text-white flex flex-col relative overflow-x-hidden">
+    <div className={`min-h-screen ${isDarkMode ? "bg-[#0b0607] text-white" : "bg-slate-50 text-slate-900"} flex flex-col relative overflow-x-hidden transition-colors duration-300`}>
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-red-600/20 blur-[120px]" />
@@ -37,19 +40,40 @@ export default function App() {
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
-            backgroundImage:
-              "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.6) 1px, transparent 0)",
+            backgroundImage: `radial-gradient(circle at 1px 1px, ${isDarkMode ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.4)"} 1px, transparent 0)`,
             backgroundSize: "28px 28px",
           }}
         />
       </div>
 
       <div className="relative flex flex-col flex-grow">
-        {/* Top Right Menu Bar Toggle Trigger */}
-        <div className="absolute top-4 right-4 z-50">
+        {/* Top Right Controls: Theme Toggle + Menu Bar Toggle */}
+        <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+          {/* Modern Dark/Light Theme Toggle Button */}
+          <button
+            onClick={() => setIsDarkMode(!isDarkMode)}
+            className={`flex items-center justify-center h-11 w-11 rounded-xl border transition-all shadow-lg active:scale-95 ${
+              isDarkMode 
+                ? "bg-[#160d0e] border-white/10 text-orange-400 hover:bg-orange-500/10" 
+                : "bg-white border-slate-200 text-orange-600 hover:bg-orange-50"
+            }`}
+            aria-label="Toggle Theme"
+          >
+            {isDarkMode ? (
+              <span className="text-lg">☀️</span>
+            ) : (
+              <span className="text-lg">🌙</span>
+            )}
+          </button>
+
+          {/* Menu Bar Toggle Trigger */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="flex items-center justify-center h-11 w-11 rounded-xl bg-[#160d0e] border border-white/10 text-orange-400 hover:bg-orange-500/10 transition-all shadow-lg active:scale-95"
+            className={`flex items-center justify-center h-11 w-11 rounded-xl border transition-all shadow-lg active:scale-95 ${
+              isDarkMode 
+                ? "bg-[#160d0e] border-white/10 text-orange-400 hover:bg-orange-500/10" 
+                : "bg-white border-slate-200 text-orange-600 hover:bg-orange-50"
+            }`}
             aria-label="Toggle Menu"
           >
             {menuOpen ? (
@@ -63,14 +87,16 @@ export default function App() {
         {/* Backdrop Blur Menu Overlay */}
         {menuOpen && (
           <div className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md transition-all flex items-center justify-center p-4">
-            <div className="bg-[#12080a] border border-white/15 rounded-3xl w-full max-w-sm p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
-              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+            <div className={`border rounded-3xl w-full max-w-sm p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200 ${
+              isDarkMode ? "bg-[#12080a] border-white/15 text-white" : "bg-white border-slate-200 text-slate-900"
+            }`}>
+              <div className={`flex items-center justify-between border-b pb-4 ${isDarkMode ? "border-white/10" : "border-slate-200"}`}>
                 <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
                   Navigation Menu
                 </h3>
                 <button
                   onClick={() => setMenuOpen(false)}
-                  className="text-slate-400 hover:text-white text-sm px-2 py-1 rounded-lg bg-white/5"
+                  className={`text-sm px-2.5 py-1 rounded-lg ${isDarkMode ? "text-slate-400 hover:text-white bg-white/5" : "text-slate-600 hover:text-slate-900 bg-slate-100"}`}
                 >
                   Close
                 </button>
@@ -82,21 +108,33 @@ export default function App() {
                     setMenuOpen(false);
                     window.scrollTo({ top: 0, behavior: "smooth" });
                   }}
-                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-orange-500/15 text-left font-medium text-slate-200 hover:text-orange-300 transition-all border border-transparent hover:border-orange-500/30"
+                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left font-medium transition-all border ${
+                    isDarkMode 
+                      ? "bg-white/5 hover:bg-orange-500/15 text-slate-200 hover:text-orange-300 border-transparent hover:border-orange-500/30" 
+                      : "bg-slate-50 hover:bg-orange-50 text-slate-700 hover:text-orange-600 border-slate-200 hover:border-orange-200"
+                  }`}
                 >
                   <span>🏠</span> Home
                 </button>
 
                 <button
                   onClick={() => scrollToSection("subdomains")}
-                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-orange-500/15 text-left font-medium text-slate-200 hover:text-orange-300 transition-all border border-transparent hover:border-orange-500/30"
+                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left font-medium transition-all border ${
+                    isDarkMode 
+                      ? "bg-white/5 hover:bg-orange-500/15 text-slate-200 hover:text-orange-300 border-transparent hover:border-orange-500/30" 
+                      : "bg-slate-50 hover:bg-orange-50 text-slate-700 hover:text-orange-600 border-slate-200 hover:border-orange-200"
+                  }`}
                 >
                   <span>🔍</span> Subdomain Scan
                 </button>
 
                 <button
                   onClick={() => scrollToSection("directories")}
-                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-orange-500/15 text-left font-medium text-slate-200 hover:text-orange-300 transition-all border border-transparent hover:border-orange-500/30"
+                  className={`flex items-center gap-3 w-full px-4 py-3 rounded-xl text-left font-medium transition-all border ${
+                    isDarkMode 
+                      ? "bg-white/5 hover:bg-orange-500/15 text-slate-200 hover:text-orange-300 border-transparent hover:border-orange-500/30" 
+                      : "bg-slate-50 hover:bg-orange-50 text-slate-700 hover:text-orange-600 border-slate-200 hover:border-orange-200"
+                  }`}
                 >
                   <span>📂</span> Directories Scan
                 </button>
@@ -116,10 +154,10 @@ export default function App() {
 
         {/* Tabbed interface section with unique smooth button animation */}
         <section className="mx-auto max-w-6xl w-full px-4 mb-4 sm:px-6">
-          <div className="border border-white/10 rounded-2xl bg-[#0e0a0a]/90 backdrop-blur-md shadow-2xl">
+          <div className={`border rounded-2xl shadow-2xl backdrop-blur-md ${isDarkMode ? "border-white/10 bg-[#0e0a0a]/90" : "border-slate-200 bg-white/90"}`}>
             
-            {/* Context Selector Buttons (Tab list) with unique transition effect */}
-            <div className="flex border-b border-white/10 p-1.5 gap-2">
+            {/* Context Selector Buttons (Tab list) */}
+            <div className={`flex border-b p-1.5 gap-2 ${isDarkMode ? "border-white/10" : "border-slate-200"}`}>
               {Object.entries(scannerModes).map(([key, { label }]) => {
                 const isActive = activeTab === key;
                 return (
@@ -128,8 +166,8 @@ export default function App() {
                     onClick={() => setActiveTab(key as keyof typeof scannerModes)}
                     className={`flex-1 relative px-6 py-3.5 text-center font-semibold rounded-xl transition-all duration-300 transform active:scale-95 
                       ${isActive 
-                        ? 'bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-300 border border-orange-500/40 shadow-[0_0_20px_rgba(249,115,22,0.15)]' 
-                        : 'text-slate-400 hover:text-white hover:bg-white/[0.03] border border-transparent'}`}
+                        ? 'bg-gradient-to-r from-orange-500/20 to-red-500/20 text-orange-400 border border-orange-500/40 shadow-[0_0_20px_rgba(249,115,22,0.15)]' 
+                        : isDarkMode ? 'text-slate-400 hover:text-white hover:bg-white/[0.03] border border-transparent' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-transparent'}`}
                   >
                     <span className="relative z-10 flex items-center justify-center gap-2">
                       {isActive && <span className="h-2 w-2 rounded-full bg-orange-500 animate-pulse" />}
@@ -151,10 +189,10 @@ export default function App() {
         {/* Features info bar */}
         <section className="mx-auto max-w-6xl w-full px-4 pb-16 sm:px-6">
           <div className="mt-6 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-500">
-            <span className="rounded-full border border-white/10 px-3 py-1">⚡ Async concurrent scanning</span>
-            <span className="rounded-full border border-white/10 px-3 py-1">🌐 Real DNS + HTTP verification</span>
-            <span className="rounded-full border border-white/10 px-3 py-1">📱 Fully mobile responsive</span>
-            <span className="rounded-full border border-white/10 px-3 py-1">🐍 Python + FastAPI backend</span>
+            <span className={`rounded-full border px-3 py-1 ${isDarkMode ? "border-white/10" : "border-slate-200 bg-white"}`}>⚡ Async concurrent scanning</span>
+            <span className={`rounded-full border px-3 py-1 ${isDarkMode ? "border-white/10" : "border-slate-200 bg-white"}`}>🌐 Real DNS + HTTP verification</span>
+            <span className={`rounded-full border px-3 py-1 ${isDarkMode ? "border-white/10" : "border-slate-200 bg-white"}`}>📱 Fully mobile responsive</span>
+            <span className={`rounded-full border px-3 py-1 ${isDarkMode ? "border-white/10" : "border-slate-200 bg-white"}`}>🐍 Python + FastAPI backend</span>
           </div>
         </section>
 
