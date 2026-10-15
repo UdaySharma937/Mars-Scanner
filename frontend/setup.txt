@@ -1,0 +1,228 @@
+=====================================================================
+ MARSSCANNER - FULL SETUP & FREE DEPLOYMENT GUIDE (Beginner Friendly)
+=====================================================================
+
+MarsScanner is made of TWO parts:
+
+ 1) FRONTEND  -> React + Vite + Tailwind (the website you see)
+                 Located at the project root (src/, index.html, etc.)
+
+ 2) BACKEND   -> Python + FastAPI (the real scanning engine)
+                 Located inside the "backend/" folder.
+
+The frontend NEVER does the scanning itself - it only shows the UI
+and talks to your backend over a WebSocket connection to get live,
+real-time results (full URLs, status codes, IPs, etc.).
+
+Both the Subdomain wordlist (120,000+ words) and the Directory
+wordlist (110,000+ words) are generated automatically inside the
+backend (backend/wordlists.py). Every scan ALWAYS uses the complete
+wordlist - there is nothing to pick/select, and the website never
+shows the wordlist size anywhere.
+
+You can run everything for FREE using GitHub + Render + Vercel/Netlify.
+No credit card required for the free tiers used below.
+
+---------------------------------------------------------------------
+PART 0 - WHAT YOU NEED
+---------------------------------------------------------------------
+ - A free GitHub account       -> https://github.com
+ - A free Render account       -> https://render.com        (for backend)
+ - A free Vercel account       -> https://vercel.com         (for frontend)
+   OR a free Netlify account   -> https://netlify.com
+ - Git installed on your computer (or just use GitHub Desktop / web upload)
+ - Node.js installed (for local testing)              -> https://nodejs.org
+ - Python 3.10+ installed (for local testing)          -> https://python.org
+
+---------------------------------------------------------------------
+PART 1 - RUN IT LOCALLY FIRST (RECOMMENDED, TAKES 5 MINUTES)
+---------------------------------------------------------------------
+
+1. BACKEND (Python + FastAPI)
+   --------------------------
+   a. Open a terminal in the project folder, then go into backend/:
+        cd backend
+
+   b. Create and activate a virtual environment (recommended):
+        python -m venv .venv
+        # Windows:
+        .venv\Scripts\activate
+        # Mac/Linux:
+        source .venv/bin/activate
+
+   c. Install dependencies:
+        pip install -r requirements.txt
+
+   d. Start the API server:
+        uvicorn main:app --reload --host 0.0.0.0 --port 8000
+
+   e. Confirm it's running by opening in your browser:
+        http://localhost:8000/api/health
+      You should see: {"status":"ok","engine_ready":true}
+
+      Interactive API docs are available at:
+        http://localhost:8000/docs
+
+2. FRONTEND (React + Vite)
+   ------------------------
+   a. In a NEW terminal, go back to the project root (not backend/):
+        npm install
+        npm run dev
+
+   b. Open the printed local URL (usually http://localhost:5173)
+
+   c. Click the "Settings" (⚙️) button in the top right of the website,
+      and set the Backend API URL to:
+        http://localhost:8000
+      Click Save.
+
+   d. Go to the "Subdomain Finder" or "Directory Finder" section, type
+      a domain (e.g. example.com) or a full URL (e.g. https://example.com),
+      and click "Start Scan". Results stream in live with full URLs.
+
+That's it - fully working locally!
+
+---------------------------------------------------------------------
+PART 2 - FREE DEPLOYMENT (SO IT'S LIVE ON THE INTERNET)
+---------------------------------------------------------------------
+
+STEP A: Push your project to GitHub
+------------------------------------
+ 1. Create a new repository on https://github.com/new (e.g. "marsscanner")
+ 2. In your project folder, run:
+        git init
+        git add .
+        git commit -m "Initial MarsScanner commit"
+        git branch -M main
+        git remote add origin https://github.com/<your-username>/marsscanner.git
+        git push -u origin main
+
+ (If you don't want to use Git commands, you can also just drag and
+  drop/upload the project files directly on the GitHub website.)
+
+
+STEP B: Deploy the BACKEND (FastAPI) on Render.com - FREE
+-----------------------------------------------------------
+ 1. Go to https://render.com and sign up / log in (you can use GitHub login).
+ 2. Click "New +" -> "Web Service".
+ 3. Connect your GitHub account and select your "marsscanner" repository.
+ 4. Fill in the settings:
+        Name:               marsscanner-api
+        Root Directory:     backend
+        Environment:        Python 3
+        Build Command:      pip install -r requirements.txt
+        Start Command:      uvicorn main:app --host 0.0.0.0 --port $PORT
+        Instance Type:      Free
+ 5. Click "Create Web Service". Wait 2-3 minutes for the build & deploy.
+ 6. Once live, Render gives you a public URL like:
+        https://marsscanner-api.onrender.com
+ 7. Test it by opening:
+        https://marsscanner-api.onrender.com/api/health
+    You should see {"status":"ok","engine_ready":true}
+
+    NOTE: Render's free tier "sleeps" the server after ~15 minutes of
+    inactivity. The first request after sleeping may take ~30-50
+    seconds to wake up - this is normal for free hosting.
+
+    (A render.yaml file is already included in backend/ so Render can
+    auto-detect these settings too - "Blueprint" deploy option.)
+
+    ALTERNATIVES to Render (also free, same idea - set Root Directory
+    to "backend", Build Command "pip install -r requirements.txt",
+    Start Command "uvicorn main:app --host 0.0.0.0 --port $PORT"):
+        - Railway.app
+        - Fly.io
+        - PythonAnywhere (manual WSGI/ASGI setup required)
+
+
+STEP C: Deploy the FRONTEND (React) on Vercel - FREE
+-------------------------------------------------------
+ 1. Go to https://vercel.com and sign up / log in with GitHub.
+ 2. Click "Add New..." -> "Project".
+ 3. Import your "marsscanner" GitHub repository.
+ 4. Vercel auto-detects Vite. Confirm these settings:
+        Framework Preset:   Vite
+        Build Command:      npm run build
+        Output Directory:   dist
+        Root Directory:     (leave as project root, NOT backend)
+ 5. Click "Deploy". Wait 1-2 minutes.
+ 6. You'll get a live URL like:
+        https://marsscanner.vercel.app
+
+ OR USE NETLIFY INSTEAD (also free):
+ 1. Go to https://netlify.com -> "Add new site" -> "Import an existing project".
+ 2. Connect GitHub and pick your repo.
+ 3. Build command: npm run build
+    Publish directory: dist
+ 4. Click "Deploy site". You'll get a URL like https://marsscanner.netlify.app
+
+
+STEP D: Connect the live frontend to the live backend
+---------------------------------------------------------
+ 1. Open your deployed frontend URL (e.g. https://marsscanner.vercel.app)
+ 2. Click the "Settings" (⚙️) button (top right).
+ 3. Paste your Render backend URL, e.g.:
+        https://marsscanner-api.onrender.com
+ 4. Click "Save".
+ 5. Start scanning - it's now fully live on the internet, for free!
+
+ (Optional) Instead of manually setting the URL every time in Settings,
+ you can also "bake it in" at build time:
+   - In Vercel/Netlify project settings, add an Environment Variable:
+        VITE_API_BASE = https://marsscanner-api.onrender.com
+   - Redeploy. The app will default to this URL automatically
+     (users can still override it from Settings if needed).
+
+---------------------------------------------------------------------
+PART 3 - HOW SCANNING WORKS (TECHNICAL SUMMARY)
+---------------------------------------------------------------------
+ - Subdomain Finder:
+     For each candidate word in the 120,000+ generated wordlist, the
+     backend builds "<word>.<domain>", resolves it via real DNS, and
+     (if it resolves) verifies it live with an HTTP request to report
+     the final URL + HTTP status code + IP address.
+
+ - Directory Finder:
+     For each candidate word in the 110,000+ generated wordlist, the
+     backend requests "<url>/<word>" and reports it if the response
+     looks real (status 200, 301, 302, 401, 403, etc. - 404s are
+     skipped automatically).
+
+ - Both scans run fully asynchronously with high concurrency
+   (hundreds of requests in parallel) for speed, and stream matches
+   back to the browser instantly over a WebSocket - you don't wait
+   for the whole scan to finish to see results, and you can hit
+   "Stop Scan" at any time.
+
+---------------------------------------------------------------------
+PART 4 - TROUBLESHOOTING
+---------------------------------------------------------------------
+ - "Could not reach the MarsScanner backend" on the website:
+     -> Double check the Backend API URL in Settings (no trailing slash
+        issues, must start with http:// or https://).
+     -> Make sure the backend is deployed/running and /api/health
+        returns {"status":"ok"}.
+     -> If using Render free tier, the backend may be "waking up" -
+        wait ~30 seconds and try again.
+
+ - CORS errors in browser console:
+     -> The backend already allows all origins (CORS enabled for *),
+        so this should not happen. Make sure you're pointing to the
+        correct backend URL.
+
+ - Scan seems slow:
+     -> This is expected for very strict/slow target servers that
+        rate-limit requests; the engine itself scans with high
+        concurrency (hundreds of parallel requests) for speed.
+
+---------------------------------------------------------------------
+LEGAL / ETHICAL NOTE
+---------------------------------------------------------------------
+Only scan domains/websites you own or have explicit permission to
+test. Unauthorized scanning of third-party systems may be illegal in
+your jurisdiction. MarsScanner is intended for authorized security
+research, bug bounty, and educational purposes only.
+
+=====================================================================
+ END OF SETUP GUIDE - Enjoy MarsScanner!
+=====================================================================
