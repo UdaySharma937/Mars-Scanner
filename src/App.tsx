@@ -31,7 +31,7 @@ export default function App() {
   };
 
   return (
-    <div className={`min-h-screen ${isDarkMode ? "bg-[#0b0607] text-white" : "bg-slate-50 text-slate-900"} flex flex-col relative overflow-x-hidden transition-colors duration-300`}>
+    <div className={`min-h-screen ${isDarkMode ? "bg-[#0b0607] text-white" : "bg-slate-50 text-slate-900"} flex flex-col relative overflow-x-hidden touch-pan-y transition-colors duration-300`}>
       {/* Ambient background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-40 -top-40 h-96 w-96 rounded-full bg-red-600/20 blur-[120px]" />
@@ -145,7 +145,7 @@ export default function App() {
 
         <Header onOpenSettings={() => setSettingsOpen(true)} onOpenGuide={() => setGuideOpen(true)} />
         
-        {/* Security Intelligence Logo Section (Mars Theme Consistent) */}
+        {/* Security Intelligence Logo Section (Matching Header Mars Icon) */}
         <div className="mx-auto mt-6 flex items-center justify-center gap-3.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-500/10 via-red-500/10 to-transparent border border-orange-500/20 backdrop-blur-md max-w-sm shadow-[0_0_20px_rgba(249,115,22,0.1)]">
           <div className="relative flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-red-600 via-orange-500 to-red-700 shadow-[0_0_15px_rgba(249,115,22,0.5)]">
             <span className="text-xl">🔴</span>
