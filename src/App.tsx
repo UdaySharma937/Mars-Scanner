@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScannerSection from "./components/ScannerSection";
@@ -145,14 +145,30 @@ export default function App() {
 
         <Header onOpenSettings={() => setSettingsOpen(true)} onOpenGuide={() => setGuideOpen(true)} />
         
+        {/* Modern Logo Showcase / Header Banner */}
+        <div className="mx-auto mt-6 flex items-center justify-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-500/10 via-red-500/10 to-transparent border border-orange-500/20 backdrop-blur-md max-w-sm">
+          <div className="relative flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-red-600 to-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+            <span className="text-xl">🪐</span>
+            <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-500 border-2 border-[#0b0607] animate-pulse" />
+          </div>
+          <div className="flex flex-col text-left">
+            <span className="text-base font-extrabold tracking-wider bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+              MARS SCANNER
+            </span>
+            <span className="text-[10px] text-slate-400 font-medium tracking-widest uppercase">
+              Security Intelligence v2.4
+            </span>
+          </div>
+        </div>
+
         {/* Hero section */}
-        <section className="mx-auto max-w-6xl px-4 pb-6 pt-10 text-center sm:px-6 sm:pt-16">
+        <section className="mx-auto max-w-6xl px-4 pb-6 pt-6 text-center sm:px-6">
           <h1 className="mx-auto max-w-3xl text-3xl font-extrabold leading-tight tracking-tight sm:text-5xl">
             Explore any domain's <span className="bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">hidden surface</span>
           </h1>
         </section>
 
-        {/* Tabbed interface section with unique smooth button animation */}
+        {/* Tabbed interface section preserving states for both tabs concurrently */}
         <section className="mx-auto max-w-6xl w-full px-4 mb-4 sm:px-6">
           <div className={`border rounded-2xl shadow-2xl backdrop-blur-md ${isDarkMode ? "border-white/10 bg-[#0e0a0a]/90" : "border-slate-200 bg-white/90"}`}>
             
@@ -178,9 +194,14 @@ export default function App() {
               })}
             </div>
 
-            {/* Active Scanner Content */}
+            {/* Active Scanner Content - Both rendered simultaneously to retain scan states */}
             <div className="p-4 sm:p-6">
-              <ScannerSection mode={activeTab} />
+              <div className={activeTab === "subdomains" ? "block" : "hidden"}>
+                <ScannerSection mode="subdomains" />
+              </div>
+              <div className={activeTab === "directories" ? "block" : "hidden"}>
+                <ScannerSection mode="directories" />
+              </div>
             </div>
 
           </div>
