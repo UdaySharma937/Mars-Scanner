@@ -47,8 +47,24 @@ export default function App() {
       </div>
 
       <div className="relative flex flex-col flex-grow">
-        {/* Top Right Controls: Theme Toggle + Menu Bar Toggle */}
+        {/* Top Right Controls: GitHub Link + Theme Toggle + Menu Bar Toggle */}
         <div className="absolute top-4 right-4 z-50 flex items-center gap-2">
+          {/* GitHub Profile Link Button */}
+          <a
+            href="https://github.com/UdaySharma937"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center justify-center h-11 w-11 rounded-xl border transition-all shadow-lg active:scale-95 ${
+              isDarkMode 
+                ? "bg-[#160d0e] border-white/10 text-orange-400 hover:bg-orange-500/10" 
+                : "bg-white border-slate-200 text-orange-600 hover:bg-orange-50"
+            }`}
+            aria-label="GitHub Profile"
+            title="GitHub Profile"
+          >
+            <span className="text-lg">🐙</span>
+          </a>
+
           {/* Modern Dark/Light Theme Toggle Button */}
           <button
             onClick={() => setIsDarkMode(!isDarkMode)}
@@ -238,4 +254,4 @@ export default function App() {
       <DeployGuideModal open={guideOpen} onClose={() => setGuideOpen(false)} />
     </div>
   );
-            }
+}
