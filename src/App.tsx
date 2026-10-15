@@ -3,7 +3,9 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import ScannerSection from "./components/ScannerSection";
 
-
+export default function App() {
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [guideOpen, setGuideOpen] = useState(false);
 
 
   return (
