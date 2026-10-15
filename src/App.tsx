@@ -14,9 +14,18 @@ const scannerModes = {
 export default function App() {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [guideOpen, setGuideOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   
   // Mobile par context select karne ke liye current context state
   const [activeTab, setActiveTab] = useState<keyof typeof scannerModes>("subdomains");
+
+  const scrollToSection = (tab?: keyof typeof scannerModes) => {
+    if (tab) {
+      setActiveTab(tab);
+    }
+    setMenuOpen(false);
+    window.scrollTo({ top: 400, behavior: "smooth" });
+  };
 
   return (
     <div className="min-h-screen bg-[#0b0607] text-white flex flex-col relative overflow-x-hidden">
@@ -36,6 +45,66 @@ export default function App() {
       </div>
 
       <div className="relative flex flex-col flex-grow">
+        {/* Top Right Menu Bar Toggle Trigger */}
+        <div className="absolute top-4 right-4 z-50">
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="flex items-center justify-center h-11 w-11 rounded-xl bg-[#160d0e] border border-white/10 text-orange-400 hover:bg-orange-500/10 transition-all shadow-lg active:scale-95"
+            aria-label="Toggle Menu"
+          >
+            {menuOpen ? (
+              <span className="text-xl font-bold">✕</span>
+            ) : (
+              <span className="text-xl font-bold">☰</span>
+            )}
+          </button>
+        </div>
+
+        {/* Backdrop Blur Menu Overlay */}
+        {menuOpen && (
+          <div className="fixed inset-0 z-40 bg-black/70 backdrop-blur-md transition-all flex items-center justify-center p-4">
+            <div className="bg-[#12080a] border border-white/15 rounded-3xl w-full max-w-sm p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in-95 duration-200">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <h3 className="text-lg font-bold bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+                  Navigation Menu
+                </h3>
+                <button
+                  onClick={() => setMenuOpen(false)}
+                  className="text-slate-400 hover:text-white text-sm px-2 py-1 rounded-lg bg-white/5"
+                >
+                  Close
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-2.5">
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-orange-500/15 text-left font-medium text-slate-200 hover:text-orange-300 transition-all border border-transparent hover:border-orange-500/30"
+                >
+                  <span>🏠</span> Home
+                </button>
+
+                <button
+                  onClick={() => scrollToSection("subdomains")}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-orange-500/15 text-left font-medium text-slate-200 hover:text-orange-300 transition-all border border-transparent hover:border-orange-500/30"
+                >
+                  <span>🔍</span> Subdomain Scan
+                </button>
+
+                <button
+                  onClick={() => scrollToSection("directories")}
+                  className="flex items-center gap-3 w-full px-4 py-3 rounded-xl bg-white/5 hover:bg-orange-500/15 text-left font-medium text-slate-200 hover:text-orange-300 transition-all border border-transparent hover:border-orange-500/30"
+                >
+                  <span>📂</span> Directories Scan
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <Header onOpenSettings={() => setSettingsOpen(true)} onOpenGuide={() => setGuideOpen(true)} />
         
         {/* Hero section */}
