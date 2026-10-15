@@ -145,18 +145,18 @@ export default function App() {
 
         <Header onOpenSettings={() => setSettingsOpen(true)} onOpenGuide={() => setGuideOpen(true)} />
         
-        {/* Modern Logo Showcase / Header Banner */}
-        <div className="mx-auto mt-6 flex items-center justify-center gap-3 px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-500/10 via-red-500/10 to-transparent border border-orange-500/20 backdrop-blur-md max-w-sm">
-          <div className="relative flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-red-600 to-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+        {/* Modern Refined Logo Showcase without version number */}
+        <div className="mx-auto mt-6 flex items-center justify-center gap-3.5 px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-500/10 via-red-500/10 to-transparent border border-orange-500/20 backdrop-blur-md max-w-sm shadow-[0_0_20px_rgba(249,115,22,0.1)]">
+          <div className="relative flex items-center justify-center h-10 w-10 rounded-xl bg-gradient-to-tr from-red-600 via-orange-500 to-amber-500 shadow-[0_0_15px_rgba(249,115,22,0.5)]">
             <span className="text-xl">🪐</span>
             <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-emerald-500 border-2 border-[#0b0607] animate-pulse" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-base font-extrabold tracking-wider bg-gradient-to-r from-orange-400 to-red-500 bg-clip-text text-transparent">
+            <span className="text-base font-black tracking-widest bg-gradient-to-r from-orange-400 via-red-500 to-rose-500 bg-clip-text text-transparent">
               MARS SCANNER
             </span>
-            <span className="text-[10px] text-slate-400 font-medium tracking-widest uppercase">
-              Security Intelligence v2.4
+            <span className="text-[10px] text-orange-300/80 font-semibold tracking-wider uppercase">
+              Security Intelligence
             </span>
           </div>
         </div>
