@@ -8,7 +8,7 @@
   <img src="https://img.shields.io/badge/Tech-FastAPI%20%2B%20React-orange" />
   <img src="https://img.shields.io/badge/License-MIT-red" />
 </p>
-
+<img src="https://github.com/UdaySharma937/Mars-Scanner/blob/main/Mars-Scanner.png" />
 ---
 
 ### 🌌 About MarsScanner
