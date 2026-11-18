@@ -1,10 +1,32 @@
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { useScanner } from "../lib/useScanner";
 import type { ScanMode, DirectoryResult, SubdomainResult } from "../types/scan";
 import StatusBadge from "./StatusBadge";
 
 interface Props {
   mode: ScanMode;
+}
+
+const BACKEND_URL = "https://mars-scanner-9ttm.onrender.com";
+
+// Render free tier so jaata hai, isliye server ko hidden request bhejkar jagao.
+// User ko koi tab/page nahi dikhta.
+async function wakeBackend(maxMs = 90_000): Promise<boolean> {
+  const deadline = Date.now() + maxMs;
+  while (Date.now() < deadline) {
+    try {
+      // no-cors: CORS ki zarurat nahi, bas server ko jagana hai
+      await fetch(BACKEND_URL, {
+        mode: "no-cors",
+        cache: "no-store",
+        signal: AbortSignal.timeout(10_000),
+      });
+      return true;
+    } catch {
+      await new Promise((r) => setTimeout(r, 2000));
+    }
+  }
+  return false;
 }
 
 const COPY: Record<
@@ -42,8 +64,27 @@ export default function ScannerSection({ mode }: Props) {
   const copy = COPY[mode];
   const { state, start, stop, reset } = useScanner(mode);
   const [input, setInput] = useState("");
+  const [waking, setWaking] = useState(false);
+  const [wakeError, setWakeError] = useState("");
 
-  const isBusy = state.status === "connecting" || state.status === "scanning";
+  // Page khulte hi server ko warm kar do (optional but recommended)
+  useEffect(() => {
+    wakeBackend(60_000);
+  }, []);
+
+  const isBusy = state.status === "connecting" || state.status === "scanning" || waking;
+
+  const handleStart = async () => {
+    setWakeError("");
+    setWaking(true);
+    const ok = await wakeBackend();
+    setWaking(false);
+    if (!ok) {
+      setWakeError("Server not responding. Please try again in a minute.");
+      return;
+    }
+    start(input);
+  };
 
   const exportText = useMemo(() => {
     return state.results
@@ -84,7 +125,7 @@ export default function ScannerSection({ mode }: Props) {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          if (!isBusy) start(input);
+          if (!isBusy) handleStart();
         }}
         className="flex flex-col gap-3 sm:flex-row"
       >
@@ -105,6 +146,14 @@ export default function ScannerSection({ mode }: Props) {
           >
             🚀 Start Scan
           </button>
+        ) : waking ? (
+          <button
+            type="button"
+            disabled
+            className="flex items-center justify-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/10 px-6 py-3 text-sm font-semibold text-amber-300"
+          >
+            ⏳ Waking server…
+          </button>
         ) : (
           <button
             type="button"
@@ -118,6 +167,12 @@ export default function ScannerSection({ mode }: Props) {
 
       {/* Status line */}
       <div className="mt-4 flex flex-wrap items-center gap-3 text-xs">
+        {waking && (
+          <span className="inline-flex items-center gap-1.5 text-amber-400">
+            <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" /> Starting backend server… (first time 30-50s lag sakte hain)
+          </span>
+        )}
+        {wakeError && <span className="text-rose-400">⚠ {wakeError}</span>}
         {state.status === "connecting" && (
           <span className="inline-flex items-center gap-1.5 text-amber-400">
             <span className="h-2 w-2 animate-pulse rounded-full bg-amber-400" /> Connecting to backend…
